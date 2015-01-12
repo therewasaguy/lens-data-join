@@ -1,0 +1,50 @@
+<link rel="import" href="../polymer/polymer.html"> 
+<link rel="import" href="../th-theme/th-theme.html"> 
+
+<!--
+A Thelma component providing solution to no problem in particular.
+
+##### Example
+
+    <th-data-join></th-data-join>
+
+@element th-data-join
+@blurb Element providing solution to no problem in particular.
+@status alpha
+@homepage http://nishacodes.github.io/th-data-join
+-->
+
+<polymer-element name="th-data-join" attributes="input dataKeys joinString joinKey">
+  <template>
+    <core-style ref="theme"></core-style>
+    <link rel="stylesheet" href="th-data-join.css">
+    {{output}}
+  </template>
+  <script>
+    Polymer({
+      input: [{"city":"New York", "state":"NY"},{"city":"Philadelphia", "state":"PA"}],
+      dataKeys: ["city", "state"],
+      joinString: ", ",
+      joinKey: "location",
+      keepOriginalData: false,
+      output: [],
+      ready: function () {
+        var self = this,
+            inputLength = self.input.length;
+      
+        for (var i=0; i<self.input.length;i++){
+          var stringsToJoin = self.dataKeys.map(function(key){
+            return self.input[i][key];
+          })
+
+          if(self.keepOriginalData){
+            self.output[i] = self.input[i];
+          } else {
+            self.output[i] = {};            
+          }
+          self.output[i][self.joinKey] = stringsToJoin.join(self.joinString);
+        }
+      }
+    });
+  </script>
+</polymer-element>
