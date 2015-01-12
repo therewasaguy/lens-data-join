@@ -28,7 +28,11 @@ A Thelma component providing solution to no problem in particular.
       joinKey: "location",
       keepOriginalData: false,
       output: [],
-      ready: function () {
+      ready: function(){
+        var self = this;
+        self.inputChanged();
+      },
+      inputChanged: function(){
         var self = this,
             inputLength = self.input.length;
       
@@ -44,6 +48,7 @@ A Thelma component providing solution to no problem in particular.
           }
           self.output[i][self.joinKey] = stringsToJoin.join(self.joinString);
         }
+        console.log(self.output);
       }
     });
   </script>
