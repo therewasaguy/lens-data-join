@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html"> 
 <link rel="import" href="../th-theme/th-theme.html"> 
+<link rel="import" href="../core-input/core-input.html"> 
 
 <!--
 A Thelma component providing solution to no problem in particular.
@@ -14,30 +15,46 @@ A Thelma component providing solution to no problem in particular.
 @homepage http://nishacodes.github.io/th-data-join
 -->
 
-<polymer-element name="th-data-join" attributes="input dataKeys joinString joinKey">
+<polymer-element name="th-data-join" attributes="input selectedColumns joinString newColumnName">
   <template>
+
     <core-style ref="theme"></core-style>
     <link rel="stylesheet" href="th-data-join.css">
-    {{output}}
+    <div>
+      Columns to join: 
+      <template repeat="{{key in inputKeys}}">
+        <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
+      </template>
+    </div>
+
+    <div>
+      Join with: <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
+    </div>
+
+    <div>
+      New column name: <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
+    </div>
+
   </template>
   <script>
     Polymer({
-      input: [{"city":"New York", "state":"NY"},{"city":"Philadelphia", "state":"PA"}],
-      dataKeys: ["city", "state"],
+      input: [],
+      selectedColumns: [],
       joinString: ", ",
-      joinKey: "location",
-      keepOriginalData: false,
+      newColumnName: "New-Column",
+      keepOriginalData: true,
       output: [],
       ready: function(){
         var self = this;
-        self.inputChanged();
+        self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : [];
+        self.mapOutput();
       },
-      inputChanged: function(){
+      mapOutput: function(){
         var self = this,
             inputLength = self.input.length;
       
         for (var i=0; i<self.input.length;i++){
-          var stringsToJoin = self.dataKeys.map(function(key){
+          var stringsToJoin = self.selectedColumns.map(function(key){
             return self.input[i][key];
           })
 
@@ -46,9 +63,46 @@ A Thelma component providing solution to no problem in particular.
           } else {
             self.output[i] = {};            
           }
-          self.output[i][self.joinKey] = stringsToJoin.join(self.joinString);
+          self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
         }
-        console.log(self.output);
+      },
+      toggleSelected: function(e, detail, selection){
+        var self = this;
+        selection.classList.toggle('selected');
+
+        var selected = self.shadowRoot.querySelectorAll('.selected');
+        self.selectedColumns = [].map.call(selected, function(item) { return item.textContent});
+      },
+
+      // CHANGE OBSERVERS
+      joinStringChanged: function(){
+        var self = this;
+        self.mapOutput();
+      },
+      inputChanged: function(){
+        var self = this;
+        self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : []; // columns to choose from
+        self.mapOutput();
+      },
+      selectedColumnsChanged: function(){
+        var self = this;
+        self.mapOutput();
+      },
+      joinStringChanged: function(){
+        var self = this;
+        self.mapOutput();
+      },
+      newColumnNameChanged: function(){
+        var self = this;
+        // Don't remap output, otherwise it will keep creating new columns; instead, check if the key exists in input and if not, change it to the new column name.
+        for (var i=0; i<self.output.length; i++ ){
+          for (var key in self.output[i]){ // assumes every item is an object...
+            if(self.inputKeys.indexOf(key) < 0){
+              self.output[i][self.newColumnName] = self.output[i][key]
+              delete self.output[i][key];
+            }  
+          }
+        }
       }
     });
   </script>
