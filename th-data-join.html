@@ -115,7 +115,7 @@ A Thelma component for joining two columns together to create a new column.
           }
           self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
         }
-        self.fire('th-output-ready', self.output);
+        self.fire('th-output-changed', self.output);
       },
 
       toggleSelected: function(e, detail, selection){
