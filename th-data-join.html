@@ -3,14 +3,14 @@
 <link rel="import" href="../core-input/core-input.html"> 
 
 <!--
-A Thelma component providing solution to no problem in particular.
+A Thelma component for joining two columns together to create a new column.
 
 ##### Example
 
     <th-data-join></th-data-join>
 
 @element th-data-join
-@blurb Element providing solution to no problem in particular.
+@blurb Join two columns to create a new column.
 @status alpha
 @homepage http://nishacodes.github.io/th-data-join
 -->
@@ -38,18 +38,50 @@ A Thelma component providing solution to no problem in particular.
   </template>
   <script>
     Polymer({
+
+      /**
+       *  [input description]
+       *  @type {Array}
+       */
       input: [],
+
+      /**
+       *  [selectedColumns description]
+       *  @type {Array}
+       */
       selectedColumns: [],
+
+      /**
+       *  [joinString description]
+       *  @type {String}
+       */
       joinString: ", ",
+
+      /**
+       *  [newColumnName description]
+       *  @type {String}
+       */
       newColumnName: "",
+
+      /**
+       *  [keepOriginalData description]
+       *  @type {Boolean}
+       */
       keepOriginalData: true,
+
+      /**
+       *  [output description]
+       *  @type {Array}
+       */
       output: [],
+
       ready: function(){
         var self = this;
         self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : [];
-        self.mapOutput();
+        self._calculateOutput();
       },
-      mapOutput: function(){
+
+      _calculateOutput: function(){
         var self = this,
             inputLength = self.input.length;
       
@@ -67,6 +99,7 @@ A Thelma component providing solution to no problem in particular.
         }
         self.fire('th-output-ready', self.output);
       },
+
       toggleSelected: function(e, detail, selection){
         var self = this;
         selection.classList.toggle('selected');
@@ -78,21 +111,25 @@ A Thelma component providing solution to no problem in particular.
       // CHANGE OBSERVERS
       joinStringChanged: function(){
         var self = this;
-        self.mapOutput();
+        self._calculateOutput();
       },
+
       inputChanged: function(){
         var self = this;
         self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : []; // columns to choose from
-        self.mapOutput();
+        self._calculateOutput();
       },
+
       selectedColumnsChanged: function(){
         var self = this;
-        self.mapOutput();
+        self._calculateOutput();
       },
+
       joinStringChanged: function(){
         var self = this;
-        self.mapOutput();
+        self._calculateOutput();
       },
+
       newColumnNameChanged: function(oldValue, newValue){
         var self = this;
         
