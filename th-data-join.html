@@ -12,7 +12,7 @@ A Thelma component for joining two columns together to create a new column.
 @element th-data-join
 @blurb Join two columns to create a new column.
 @status alpha
-@homepage http://nishacodes.github.io/th-data-join
+@homepage http://thelmanews.github.io/th-data-join
 -->
 
 <polymer-element name="th-data-join" attributes="input selectedColumns joinString newColumnName">
@@ -39,39 +39,57 @@ A Thelma component for joining two columns together to create a new column.
   <script>
     Polymer({
 
-      /**
-       *  [input description]
-       *  @type {Array}
+       /**
+       *  Input data
+       *
+       *  @property input
+       *  @type Array
+       *  @default []
        */
       input: [],
 
       /**
-       *  [selectedColumns description]
-       *  @type {Array}
+       *  Array containing labels of the columns to be joined.
+       *  
+       *  @property selectedColumns
+       *  @type Array
+       *  @default []
        */
       selectedColumns: [],
 
       /**
-       *  [joinString description]
-       *  @type {String}
+       *  A string to place between each joined item in the new column.
+       *
+       *  @property joinString
+       *  @type String
+       *  @default ", "
        */
       joinString: ", ",
 
       /**
-       *  [newColumnName description]
-       *  @type {String}
+       *  Name of the new column.
+       *
+       *  @property newColumnName
+       *  @type String
+       *  @default ""
        */
       newColumnName: "",
 
       /**
-       *  [keepOriginalData description]
-       *  @type {Boolean}
+       *  If false, the original columns will be removed from output.
+       *  
+       *  @property keepOriginalData
+       *  @type Boolean
+       *  @default true
        */
       keepOriginalData: true,
 
-      /**
-       *  [output description]
-       *  @type {Array}
+       /**
+       *  Output data
+       *
+       *  @property output
+       *  @type Array
+       *  @default []
        */
       output: [],
 
