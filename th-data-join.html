@@ -20,21 +20,24 @@ A Thelma component for joining two columns together to create a new column.
 
     <core-style ref="theme"></core-style>
     <link rel="stylesheet" href="th-data-join.css">
-    <div>
-      Columns to join: 
-      <template repeat="{{key in inputKeys}}">
-        <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
-      </template>
-    </div>
+    <div class="th-container">
 
-    <div>
-      Join with: <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
-    </div>
+      <div>
+        Columns to join: 
+        <template repeat="{{key in inputKeys}}">
+          <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
+        </template>
+      </div>
 
-    <div>
-      New column name: <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
-    </div>
+      <div>
+        Join with: <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
+      </div>
 
+      <div>
+        New column name: <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
+      </div>
+
+    </div>
   </template>
   <script>
     Polymer({
