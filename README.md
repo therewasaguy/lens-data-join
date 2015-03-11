@@ -1,3 +1,3 @@
-# th-data-join
+# lens-data-join
 
-See the [component page](http://nishacodes.github.io/th-data-join) for more information.
+See the [component page](http://nishacodes.github.io/lens-data-join) for more information.
