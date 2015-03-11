@@ -1,7 +1,7 @@
 {
   "name": "lens-data-join",
   "version": "0.0.0",
-  "keywords": "thelma, polymer, web-components",
+  "keywords": "lenses, polymer, web-components",
   "main": "lens-data-join.html",
   "dependencies": {  
     "th-theme": "thelmanews/th-theme",
