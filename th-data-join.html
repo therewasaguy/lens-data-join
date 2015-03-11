@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html"> 
 <link rel="import" href="../th-theme/th-theme.html"> 
 <link rel="import" href="../core-input/core-input.html"> 
+<link rel="import" href="../core-collapse/core-collapse.html">
 
 <!--
 A Thelma component for joining two columns together to create a new column.
@@ -22,20 +23,26 @@ A Thelma component for joining two columns together to create a new column.
     <link rel="stylesheet" href="th-data-join.css">
     <div class="th-container">
 
-      <div>
-        Columns to join: 
-        <template repeat="{{key in inputKeys}}">
-          <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
-        </template>
-      </div>
+      <core-icon-button icon="perm-data-setting" on-click="{{showControls}}"></core-icon-button>
 
-      <div>
-        Join with: <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
-      </div>
+      <core-collapse id="ctrl_collapse">      
 
-      <div>
-        New column name: <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
-      </div>
+        <div>
+          Columns to join: 
+          <template repeat="{{key in inputKeys}}">
+            <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
+          </template>
+        </div>
+
+        <div>
+          Join with: <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
+        </div>
+
+        <div>
+          New column name: <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
+        </div>
+
+      </core-collapse>
 
     </div>
   </template>
@@ -160,8 +167,12 @@ A Thelma component for joining two columns together to create a new column.
           delete item[oldValue];
           return item;
         })
+      },
 
-      }
+      showControls: function(e) {
+        this.$.ctrl_collapse.toggle();
+      },
+
     });
   </script>
 </polymer-element>
