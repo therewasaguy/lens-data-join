@@ -1,21 +1,21 @@
 <!doctype html>
 <html>
 <head>
-  <title>th-data-join</title>
+  <title>lens-data-join</title>
 
   <script src='../../webcomponentsjs/webcomponents.js'></script>
   <script src='../../web-component-tester/browser.js'></script>
 
-  <link rel='import' href='../th-data-join.html'>
+  <link rel='import' href='../lens-data-join.html'>
 
 </head>
 <body>
 
-  <th-data-join id='data-join'></th-data-join>
+  <lens-data-join id='data-join'></lens-data-join>
 
   <script>
     var should = chai.should();
-    var component = document.querySelector('th-data-join');
+    var component = document.querySelector('lens-data-join');
 
     // the event listener callback will be added / removed in every async test
     var callback = function(){};
@@ -31,7 +31,7 @@
       ]);
 
     // testing suite
-    suite('<th-data-join>', function() {
+    suite('<lens-data-join>', function() {
       var joinColumns = ['text', 'date_unformat'];
 
       test('component can be created and exist', function(done) {

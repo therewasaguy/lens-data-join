@@ -4,23 +4,23 @@
 <link rel="import" href="../core-collapse/core-collapse.html">
 
 <!--
-A Thelma component for joining two columns together to create a new column.
+A Lenses component for joining two columns together to create a new column.
 
 ##### Example
 
-    <th-data-join></th-data-join>
+    <lens-data-join></lens-data-join>
 
-@element th-data-join
+@element lens-data-join
 @blurb Join two columns to create a new column.
 @status alpha
-@homepage http://thelmanews.github.io/th-data-join
+@homepage http://lenses.github.io/lens-data-join
 -->
 
-<polymer-element name="th-data-join" attributes="input output selectedColumns joinString newColumnName">
+<polymer-element name="lens-data-join" attributes="input output selectedColumns joinString newColumnName">
   <template>
 
     <core-style ref="theme"></core-style>
-    <link rel="stylesheet" href="th-data-join.css">
+    <link rel="stylesheet" href="lens-data-join.css">
     <div class="th-container">
 
       <core-icon-button icon="perm-data-setting" on-click="{{showControls}}"></core-icon-button>

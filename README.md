@@ -1,3 +1,3 @@
-# th-data-join
+# lens-data-join
 
-See the [component page](http://thelmanews.github.io/th-data-join) for more information.
+See the [component page](http://lenses.github.io/lens-data-join) for more information.
