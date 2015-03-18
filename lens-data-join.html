@@ -115,6 +115,7 @@ A data component for joining two columns together to create a new column.
           }
           self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
         }
+
         self.fire('th-output-changed', self.output);
       },
 
