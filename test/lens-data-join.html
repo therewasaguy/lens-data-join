@@ -17,9 +17,6 @@
     var should = chai.should();
     var component = document.querySelector('lens-data-join');
 
-    // the event listener callback will be added / removed in every async test
-    var callback = function(){};
-
     // some input data
     var input = new Object([
       {"index":1, "text":"Texas","dollar":"$139,000","text_number":"125 1ST ST","percent":"12.2%","date":"2-12-2015","date_unformat":"2-12-2015","billion":"1.2B"},
@@ -45,52 +42,47 @@
         done();
       });
 
-      test('joins two columns', function(done) {
+      test('change selectedColumns', function(done) {
         component.selectedColumns = joinColumns;
-        component.newColumnName = 'newCol';
-
-        callback = function(e) {
-          component.selectedColumns.length.should.equal(2);
-          component.newColumnName.should.equal('newCol');
-          component.output[0]['newCol'].should.equal('Texas, 2-12-2015');
-        };
-        component.addEventListener('th-output-changed', callback);
 
         flush(function() {
+          component.selectedColumns.length.should.equal(2);
+          done();
+        })
+      });
+
+      test('change newColumnName', function(done) {
+        component.newColumnName = 'newCol';
+
+        flush(function() {
+          component.newColumnName.should.equal('newCol');
+          component.output[0]['newCol'].should.equal('Texas, 2-12-2015');
+          console.log('hey');
+
           done();
         })
       });
 
       test('changes joinString', function(done) {
         var newJoin = ' TEST ';
-        component.removeEventListener('th-output-changed', callback);
-
-        callback = function(e) {
-          var joinStringIndex = component.output[0]['newCol'].indexOf(newJoin);
-          joinStringIndex.should.be.above(-1);
-        };
-        component.addEventListener('th-output-changed', callback);
-
         component.joinString = newJoin;
 
         flush(function() {
+          var joinStringIndex = component.output[0]['newCol'].indexOf(newJoin);
+          joinStringIndex.should.be.above(-1);
           done();
         })
       });
 
       test('can join multiple columns', function(done) {
-        component.removeEventListener('th-output-changed', callback);
-
-        callback = function(e) {
-          var newCol = component.output[0]['newCol'];
-          newCol.should.equal('Texas TEST 1 TEST $139,000 TEST 125 1ST ST TEST 2-12-2015 TEST 2-12-2015');
-        };
-        component.addEventListener('th-output-changed', callback);
 
         joinColumns = ['text', 'index', 'dollar', 'text_number', 'date', 'date_unformat'];
         component.selectedColumns = joinColumns;
 
         flush(function() {
+          var newCol = component.output[0]['newCol'];
+          newCol.should.equal('Texas TEST 1 TEST $139,000 TEST 125 1ST ST TEST 2-12-2015 TEST 2-12-2015');
+          console.log('got it');
           done();
         })
       });
@@ -105,20 +97,16 @@
       });
 
       test('keepOriginalData can be set to false', function(done) {
-        component.removeEventListener('th-output-changed', callback);
+        component.keepOriginalData = false;
+        component._calculateOutput();
 
-        callback = function(e) {
+        flush(function() {
           var dataKeys = Object.keys(component.output[0]);
+          console.log(dataKeys);
           for (var i in joinColumns) {
             var theIndex = dataKeys.indexOf(joinColumns[i]);
             theIndex.should.equal(-1);
           }
-        };
-        component.addEventListener('th-output-changed', callback);
-
-        component.keepOriginalData = false;
-
-        flush(function() {
           done();
         })
       });
