@@ -3,7 +3,8 @@
 <link rel="import" href="../core-input/core-input.html"> 
 
 <!--
-A Thelma component providing solution to no problem in particular.
+A data component for joining two columns together to create a new column.
+
 
 ##### Example
 
@@ -12,44 +13,94 @@ A Thelma component providing solution to no problem in particular.
 @element lens-data-join
 @blurb Element providing solution to no problem in particular.
 @status alpha
-@homepage http://nishacodes.github.io/lens-data-join
+@homepage http://lenses.github.io/lens-data-join
 -->
 
-<polymer-element name="lens-data-join" attributes="input selectedColumns joinString newColumnName">
+<polymer-element name="lens-data-join" attributes="input output selectedColumns joinString newColumnName">
   <template>
 
     <core-style ref="theme"></core-style>
     <link rel="stylesheet" href="lens-data-join.css">
-    <div>
-      Columns to join: 
-      <template repeat="{{key in inputKeys}}">
-        <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
-      </template>
-    </div>
 
-    <div>
-      Join with: <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
-    </div>
+    <div class="lens-container lens-data">
 
-    <div>
-      New column name: <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
+      <label>Columns to join:</label>
+        <template repeat="{{key in inputKeys}}">
+          <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
+        </template>
+
+      <label>Join with:</label>
+      <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
+
+      <label>New column name: </label>
+      <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
+
     </div>
 
   </template>
   <script>
     Polymer({
+      /**
+       *  Input data
+       *
+       *  @property input
+       *  @type Array
+       *  @default []
+       */
       input: [],
-      selectedColumns: [],
-      joinString: ", ",
-      newColumnName: "",
-      keepOriginalData: true,
+
+      /**
+       *  Output data
+       *
+       *  @property output
+       *  @type Array
+       *  @default []
+       */
       output: [],
+
+      /**
+       *  Array containing labels of the columns to be joined.
+       *  
+       *  @property selectedColumns
+       *  @type Array
+       *  @default []
+       */
+      selectedColumns: [],
+
+      /**
+       *  A string to place between each joined item in the new column.
+       *
+       *  @property joinString
+       *  @type String
+       *  @default ", "
+       */
+      joinString: ", ",
+
+      /**
+       *  Name of the new column.
+       *
+       *  @property newColumnName
+       *  @type String
+       *  @default ""
+       */
+      newColumnName: "",
+
+      /**
+       *  If false, the original columns will be removed from output.
+       *  
+       *  @property keepOriginalData
+       *  @type Boolean
+       *  @default true
+       */
+      keepOriginalData: true,
+
       ready: function(){
         var self = this;
         self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : [];
-        self.mapOutput();
+        self._calculateOutput();
       },
-      mapOutput: function(){
+
+      _calculateOutput: function(){
         var self = this,
             inputLength = self.input.length;
       
@@ -57,7 +108,6 @@ A Thelma component providing solution to no problem in particular.
           var stringsToJoin = self.selectedColumns.map(function(key){
             return self.input[i][key];
           })
-
           if(self.keepOriginalData){
             self.output[i] = self.input[i];
           } else {
@@ -65,8 +115,8 @@ A Thelma component providing solution to no problem in particular.
           }
           self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
         }
-        self.fire('th-output-ready', self.output);
       },
+
       toggleSelected: function(e, detail, selection){
         var self = this;
         selection.classList.toggle('selected');
@@ -78,20 +128,20 @@ A Thelma component providing solution to no problem in particular.
       // CHANGE OBSERVERS
       joinStringChanged: function(){
         var self = this;
-        self.mapOutput();
+        self._calculateOutput();
       },
       inputChanged: function(){
         var self = this;
         self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : []; // columns to choose from
-        self.mapOutput();
+        self._calculateOutput();
       },
       selectedColumnsChanged: function(){
         var self = this;
-        self.mapOutput();
+        self._calculateOutput();
       },
       joinStringChanged: function(){
         var self = this;
-        self.mapOutput();
+        self._calculateOutput();
       },
       newColumnNameChanged: function(oldValue, newValue){
         var self = this;
