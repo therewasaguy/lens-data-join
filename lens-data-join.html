@@ -31,10 +31,10 @@ A data component for joining two columns together to create a new column.
         </template>
         <br/>
       <label>Join with:</label>
-      <input class="txt" is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
+      <input type="text" class="txt" is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
       <br/>
       <label>New column name: </label>
-      <input class="txt" is="core-input" committedValue="{{newColumnName}}">
+      <input type="text" class="txt" is="core-input" committedValue="{{newColumnName}}">
       <br/>
       <label>Keep Original Data: </label>
     <template if="{{!keepOriginalData}}"> <core-icon icon="check-box-outline-blank" on-click="{{toggleKeepOriginalData}}"></core-icon> </template>
