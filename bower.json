@@ -4,13 +4,11 @@
   "keywords": "lenses, polymer, web-components",
   "main": "lens-data-join.html",
   "dependencies": {  
-    "th-theme": "thelmanews/th-theme",
-    "polymer": "Polymer/polymer#~0.5.5",
-    "core-input": "Polymer/core-input#~0.5.5",
-    "core-component-page": "Polymer/core-component-page#~0.5.5"
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-input": "PolymerElements/iron-input#~1.0.3"
   },
-  "dev-dependencies":  { 
-    "web-component-tester": "Polymer/web-component-tester#^2.2.6"
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
   }
 }
-

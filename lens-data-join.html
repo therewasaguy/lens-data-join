@@ -1,12 +1,10 @@
 <link rel="import" href="../polymer/polymer.html"> 
-<link rel="import" href="../th-theme/th-theme.html"> 
-<link rel="import" href="../core-input/core-input.html"> 
+<link rel="import" href="../iron-input/iron-input.html"> 
 
 <!--
 A data component for joining two columns together to create a new column.
 
-
-##### Example
+Example:
 
     <lens-data-join></lens-data-join>
 
@@ -14,32 +12,37 @@ A data component for joining two columns together to create a new column.
 @blurb Element providing solution to no problem in particular.
 @status alpha
 @homepage http://lenses.github.io/lens-data-join
+@demo
 -->
 
-<polymer-element name="lens-data-join" attributes="input output selectedColumns joinString newColumnName">
+<dom-module id="lens-data-join">
+
+  <link rel="stylesheet" href="lens-data-join.css">
+
   <template>
-
-    <core-style ref="theme"></core-style>
-    <link rel="stylesheet" href="lens-data-join.css">
-
     <div class="lens-container lens-data">
 
       <label>Columns to join:</label>
-        <template repeat="{{key in inputKeys}}">
-          <span class="columnName" on-click="{{toggleSelected}}">{{key}}</span>
+        <template is="dom-repeat" items="{{inputKeys}}">
+          <span class="columnName" on-click="toggleSelected">{{item}}</span>
         </template>
 
       <label>Join with:</label>
-      <input style="border: 2px solid #eee; padding: 3px; " is="core-input" committedValue="{{joinString}}" placeholder="" type="text">
+      <input style="border: 2px solid #eee; padding: 3px; " is="iron-input" bind-value="{{joinString}}" placeholder="" type="text">
 
       <label>New column name: </label>
-      <input style="border: 2px solid #eee; padding: 3px;" is="core-input" committedValue="{{newColumnName}}">
+      <input style="border: 2px solid #eee; padding: 3px;" is="iron-input" bind-value="{{newColumnName}}">
 
     </div>
 
   </template>
-  <script>
-    Polymer({
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'lens-data-join',
+
+    properties: {
       /**
        *  Input data
        *
@@ -47,7 +50,11 @@ A data component for joining two columns together to create a new column.
        *  @type Array
        *  @default []
        */
-      input: [],
+      input: {
+        type: Array,
+        value: [],
+        observer: "inputChanged"
+      },
 
       /**
        *  Output data
@@ -56,7 +63,10 @@ A data component for joining two columns together to create a new column.
        *  @type Array
        *  @default []
        */
-      output: [],
+      output: {
+        type: Array,
+        value: []
+      },
 
       /**
        *  Array containing labels of the columns to be joined.
@@ -65,7 +75,11 @@ A data component for joining two columns together to create a new column.
        *  @type Array
        *  @default []
        */
-      selectedColumns: [],
+      selectedColumns: {
+        type: Array,
+        value: [],
+        observer: "selectedColumnsChanged"
+      },
 
       /**
        *  A string to place between each joined item in the new column.
@@ -74,7 +88,11 @@ A data component for joining two columns together to create a new column.
        *  @type String
        *  @default ", "
        */
-      joinString: ", ",
+      joinString: {
+        type: String,
+        value: ", ",
+        observer: "joinStringChanged"
+      },
 
       /**
        *  Name of the new column.
@@ -83,7 +101,11 @@ A data component for joining two columns together to create a new column.
        *  @type String
        *  @default ""
        */
-      newColumnName: "",
+      newColumnName: {
+        type: String,
+        value: "new column",
+        observer: "newColumnNameChanged"
+      },
 
       /**
        *  If false, the original columns will be removed from output.
@@ -92,68 +114,78 @@ A data component for joining two columns together to create a new column.
        *  @type Boolean
        *  @default true
        */
-      keepOriginalData: true,
-
-      ready: function(){
-        var self = this;
-        self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : [];
-        self._calculateOutput();
-      },
-
-      _calculateOutput: function(){
-        var self = this,
-            inputLength = self.input.length;
-      
-        for (var i=0; i<self.input.length;i++){
-          var stringsToJoin = self.selectedColumns.map(function(key){
-            return self.input[i][key];
-          })
-          if(self.keepOriginalData){
-            self.output[i] = self.input[i];
-          } else {
-            self.output[i] = {};            
-          }
-          self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
-        }
-      },
-
-      toggleSelected: function(e, detail, selection){
-        var self = this;
-        selection.classList.toggle('selected');
-
-        var selected = self.shadowRoot.querySelectorAll('.selected');
-        self.selectedColumns = [].map.call(selected, function(item) { return item.textContent});
-      },
-
-      // CHANGE OBSERVERS
-      joinStringChanged: function(){
-        var self = this;
-        self._calculateOutput();
-      },
-      inputChanged: function(){
-        var self = this;
-        self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : []; // columns to choose from
-        self._calculateOutput();
-      },
-      selectedColumnsChanged: function(){
-        var self = this;
-        self._calculateOutput();
-      },
-      joinStringChanged: function(){
-        var self = this;
-        self._calculateOutput();
-      },
-      newColumnNameChanged: function(oldValue, newValue){
-        var self = this;
-        
-        // Remapping triggers the change in an observer
-        self.output = self.output.map(function(item){
-          item[newValue] = item[oldValue];
-          delete item[oldValue];
-          return item;
-        })
-
+      keepOriginalData: {
+        type: Boolean,
+        value: true
       }
-    });
-  </script>
-</polymer-element>
+    },
+
+    ready: function(){
+      var self = this;
+
+      console.log('attached');
+
+      self.async(function() {
+        console.log('attached async');
+        self.inputChanged();
+      })
+    },
+
+    _calculateOutput: function(){
+      var self = this,
+          inputLength = self.input.length;
+
+      for (var i=0; i<self.input.length;i++){
+        var stringsToJoin = self.selectedColumns.map(function(key){
+          return self.input[i][key];
+        });
+
+        if(self.keepOriginalData){
+          self.output[i] = self.input[i];
+        } else {
+          self.output[i] = {};            
+        }
+        self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
+      }
+    },
+
+    toggleSelected: function(e, detail){
+      var self = this;
+      var selection = e.target;
+      selection.classList.toggle('selected');
+
+      var selected = self.querySelectorAll('.selected');
+
+      self.selectedColumns = [].map.call(selected, function(item) { return item.textContent});
+    },
+
+    // CHANGE OBSERVERS
+    inputChanged: function(){
+      var self = this;
+
+      var input = self.input;
+
+      self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : []; // columns to choose from
+      self._calculateOutput();
+    },
+    selectedColumnsChanged: function(){
+      var self = this;
+      self._calculateOutput();
+    },
+    joinStringChanged: function(){
+      var self = this;
+      self._calculateOutput();
+    },
+    newColumnNameChanged: function(newValue, oldValue){
+      var self = this;
+      
+      // Remapping triggers the change in an observer
+      self.output = self.output.map(function(item){
+        item[newValue] = item[oldValue];
+        delete item[oldValue];
+        return item;
+      })
+    }
+
+  });
+</script>
