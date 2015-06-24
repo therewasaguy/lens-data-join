@@ -62,61 +62,50 @@
 
   </head>
   <body unresolved>
-    <lens-data-join id="component"></lens-data-join>
 
-      <script>
-        var hi = [1, 2, 3, 4400];
-      </script>
+    <section>
+      <label>Input:</label>
+      <pre id="input"></pre>
+    </section>
+    <section class="component">
+      <label>Component:</label>
+      <lens-data-join id="component"></lens-data-join>
+    </section>
+    <section>
+      <label>Output:</label>
+      <pre id="output"></pre>
+    </section>
 
-    <template is="dom-bind">
+    <script>
 
+    // input data
+    var input = new Object([
+      {"index":1, "text":"Texas","dollar":"$139,000","text_number":"125 1ST ST","percent":"12.2%","date":"2-12-2015","date_unformat":"2-12-2015","billion":"1.2B"},
+      {"index":2, "text":"Vermont","dollar":"$15,300","text_number":"$126,000 Reward","percent":"0.6%","date":"2-12-2010","date_unformat":"12/25/1995","billion":".2B"},
+      {"index":3, "text":"New York","dollar":"$205,800","text_number":"2nd Place","percent":"1.5%","date":"5-12-2015","date_unformat":"February 20, 2015","billion":"1.2B"},
+      {"index":4, "text":"New Mexico","dollar":"$1,180,700","text_number":"only text","percent":"1.5%","date":"12-12-2012","date_unformat":"Jan 20, 2015","billion":"0.5B"},
+      {"index":5, "text":"California","dollar":"$188,400","text_number":"$ value","percent":"-0.4%","date":"1-1-2015","date_unformat":"3-3-2015","billion":"11B"},
+      {"index":6, "text":"Alaska","dollar":"$145,900","text_number":"Q3 2012","percent":"3.3%","date":"10-30-1915","date_unformat":"4/4/2015","billion":"9B"}
+      ]);
 
-        <template id="t" is="dom-repeat" items="{{hi}}">
-          <div> <span>{{item}}</span> <span>{{item}}</span></div>
-        </template>
+    window.onload = function() {
+      var elem = document.querySelector('#component');
+      var preInput = document.getElementById('input');
+      var preOutput = document.getElementById('output');
 
-    </template>
+      //set the input
+      elem.input = input;
 
-<!--       <section>
-        <label>Input:</label>
-        <template id="inputPre">
-          <pre id="input">{{component.input}}</pre>
-        </template>
-      </section>
-      <section class="component">
-        <label>Component:</label>
-      </section>
-      <section>
-        <label>Output:</label>
-        <pre id="output">{{myoutput}}</pre>
-      </section> -->
+      preInput.textContent = JSON.stringify(input, undefined, 2);
 
-      <script>
+      // update output
+      document.addEventListener('lens-output-changed', function(val) {
+        console.log(val);
+        preOutput.textContent = JSON.stringify(val.detail, undefined, 2);
+      });
+    };
 
-        // input data
-        var input = new Object([
-          {"index":1, "text":"Texas","dollar":"$139,000","text_number":"125 1ST ST","percent":"12.2%","date":"2-12-2015","date_unformat":"2-12-2015","billion":"1.2B"},
-          {"index":2, "text":"Vermont","dollar":"$15,300","text_number":"$126,000 Reward","percent":"0.6%","date":"2-12-2010","date_unformat":"12/25/1995","billion":".2B"},
-          {"index":3, "text":"New York","dollar":"$205,800","text_number":"2nd Place","percent":"1.5%","date":"5-12-2015","date_unformat":"February 20, 2015","billion":"1.2B"},
-          {"index":4, "text":"New Mexico","dollar":"$1,180,700","text_number":"only text","percent":"1.5%","date":"12-12-2012","date_unformat":"Jan 20, 2015","billion":"0.5B"},
-          {"index":5, "text":"California","dollar":"$188,400","text_number":"$ value","percent":"-0.4%","date":"1-1-2015","date_unformat":"3-3-2015","billion":"11B"},
-          {"index":6, "text":"Alaska","dollar":"$145,900","text_number":"Q3 2012","percent":"3.3%","date":"10-30-1915","date_unformat":"4/4/2015","billion":"9B"}
-          ]);
+    </script>
 
-        window.onload = function() {
-          console.log('page load!');
-          var elem = document.querySelector('#component');
-          // var tp = document.querySelector('#t');
-
-          //set the input
-          elem.input = input;
-
-          // tp.addEventListener('dom-change', function() {
-          //   // auto-binding template is ready.
-          //   console.log('dom changed!');
-          // });
-        }
-
-        </script>
   </body>
 </html>

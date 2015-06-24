@@ -15,7 +15,7 @@ Example:
 @demo
 -->
 
-<dom-module id="lens-data-join">
+<dom-module id="lens-data-join" attributes="input output">
 
   <link rel="stylesheet" href="lens-data-join.css">
 
@@ -24,7 +24,7 @@ Example:
 
       <label>Columns to join:</label>
         <template is="dom-repeat" items="{{inputKeys}}">
-          <span class="columnName" on-click="toggleSelected">{{item}}</span>
+          <span class="columnName" on-click="_toggleSelected">{{item}}</span>
         </template>
 
       <label>Join with:</label>
@@ -53,7 +53,7 @@ Example:
       input: {
         type: Array,
         value: [],
-        observer: "inputChanged"
+        observer: "_inputChanged"
       },
 
       /**
@@ -65,7 +65,9 @@ Example:
        */
       output: {
         type: Array,
-        value: []
+        value: [],
+        notify: true,
+        readOnly: true
       },
 
       /**
@@ -78,7 +80,7 @@ Example:
       selectedColumns: {
         type: Array,
         value: [],
-        observer: "selectedColumnsChanged"
+        observer: "_selectedColumnsChanged"
       },
 
       /**
@@ -91,7 +93,7 @@ Example:
       joinString: {
         type: String,
         value: ", ",
-        observer: "joinStringChanged"
+        observer: "_joinStringChanged"
       },
 
       /**
@@ -104,7 +106,7 @@ Example:
       newColumnName: {
         type: String,
         value: "new column",
-        observer: "newColumnNameChanged"
+        observer: "_newColumnNameChanged"
       },
 
       /**
@@ -118,17 +120,6 @@ Example:
         type: Boolean,
         value: true
       }
-    },
-
-    ready: function(){
-      var self = this;
-
-      console.log('attached');
-
-      self.async(function() {
-        console.log('attached async');
-        self.inputChanged();
-      })
     },
 
     _calculateOutput: function(){
@@ -147,9 +138,12 @@ Example:
         }
         self.output[i][self.newColumnName] = stringsToJoin.join(self.joinString);
       }
+
+      // fire event
+      self.fire('lens-output-changed', self.output);
     },
 
-    toggleSelected: function(e, detail){
+    _toggleSelected: function(e, detail){
       var self = this;
       var selection = e.target;
       selection.classList.toggle('selected');
@@ -160,7 +154,7 @@ Example:
     },
 
     // CHANGE OBSERVERS
-    inputChanged: function(){
+    _inputChanged: function(){
       var self = this;
 
       var input = self.input;
@@ -168,15 +162,15 @@ Example:
       self.inputKeys = self.input[0] ? Object.keys(self.input[0]) : []; // columns to choose from
       self._calculateOutput();
     },
-    selectedColumnsChanged: function(){
+    _selectedColumnsChanged: function(){
       var self = this;
       self._calculateOutput();
     },
-    joinStringChanged: function(){
+    _joinStringChanged: function(){
       var self = this;
       self._calculateOutput();
     },
-    newColumnNameChanged: function(newValue, oldValue){
+    _newColumnNameChanged: function(newValue, oldValue){
       var self = this;
       
       // Remapping triggers the change in an observer
@@ -184,7 +178,9 @@ Example:
         item[newValue] = item[oldValue];
         delete item[oldValue];
         return item;
-      })
+      });
+
+      self._calculateOutput();
     }
 
   });
