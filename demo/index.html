@@ -99,9 +99,10 @@
       preInput.textContent = JSON.stringify(input, undefined, 2);
 
       // update output
-      document.addEventListener('lens-output-changed', function(val) {
-        console.log(val);
-        preOutput.textContent = JSON.stringify(val.detail, undefined, 2);
+      document.addEventListener('lens-output-changed', function(e) {
+        var elem = e.detail;
+        var output = elem.output
+        preOutput.textContent = JSON.stringify(output, undefined, 2);
       });
     };
 
